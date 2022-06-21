@@ -85,3 +85,72 @@ System.out.println("height:" + txInfo.height());
 System.out.println("applicationStatus:" + txInfo.applicationStatus());
 ```
 
+### Transfer transaction (Builder creation)
+```java
+// создаем транзакцию
+TransferTransaction tx = TransferTransaction
+        .builder(
+        bob.address(), // указываем получателя
+        Amount.of(1000) // указываем количество и ассет, который передаем
+        )
+        .getSignedWith(alice); // подписываем приватным ключом Алисы
+
+// публикуем и ждем
+node.waitForTransaction(node.broadcast(tx).id());
+
+// читаем
+TransferTransactionInfo txInfo = node.getTransactionInfo(tx.id(), TransferTransactionInfo.class);
+
+System.out.println("type:" + txInfo.tx().type());
+System.out.println("id:" + txInfo.tx().id());
+System.out.println("fee:" + txInfo.tx().fee().value());
+System.out.println("feeAssetId:" + txInfo.tx().fee().assetId().encoded());
+System.out.println("timestamp:" + txInfo.tx().timestamp());
+System.out.println("version:" + txInfo.tx().version());
+System.out.println("chainId:" + txInfo.tx().chainId());
+System.out.println("sender:" + txInfo.tx().sender().address().encoded());
+System.out.println("senderPublicKey:" + txInfo.tx().sender().encoded());
+System.out.println("proofs:" + txInfo.tx().proofs());
+System.out.println("recipient:" + txInfo.tx().recipient());
+System.out.println("assetId:" + txInfo.tx().amount().assetId().encoded());
+System.out.println("amount:" + txInfo.tx().amount().value());
+System.out.println("attachment:" + txInfo.tx().attachment().encoded());
+System.out.println("height:" + txInfo.height());
+System.out.println("applicationStatus:" + txInfo.applicationStatus());
+```
+
+### Transfer transaction (Constructor creation)
+```java
+// создаем транзакцию
+TransferTransaction tx = new TransferTransaction(
+        alice.publicKey(), // sender public key
+        bob.address(), // recipient
+        Amount.of(1000), // amount
+        null // attachment
+        )
+        .addProof(alice);
+
+// публикуем и ждем
+node.waitForTransaction(node.broadcast(tx).id());
+
+// читаем
+TransferTransactionInfo txInfo = node.getTransactionInfo(tx.id(), TransferTransactionInfo.class);
+
+System.out.println("type:" + txInfo.tx().type());
+System.out.println("id:" + txInfo.tx().id());
+System.out.println("fee:" + txInfo.tx().fee().value());
+System.out.println("feeAssetId:" + txInfo.tx().fee().assetId().encoded());
+System.out.println("timestamp:" + txInfo.tx().timestamp());
+System.out.println("version:" + txInfo.tx().version());
+System.out.println("chainId:" + txInfo.tx().chainId());
+System.out.println("sender:" + txInfo.tx().sender().address().encoded());
+System.out.println("senderPublicKey:" + txInfo.tx().sender().encoded());
+System.out.println("proofs:" + txInfo.tx().proofs());
+System.out.println("recipient:" + txInfo.tx().recipient());
+System.out.println("assetId:" + txInfo.tx().amount().assetId().encoded());
+System.out.println("amount:" + txInfo.tx().amount().value());
+System.out.println("attachment:" + txInfo.tx().attachment().encoded());
+System.out.println("height:" + txInfo.height());
+System.out.println("applicationStatus:" + txInfo.applicationStatus());
+```
+
