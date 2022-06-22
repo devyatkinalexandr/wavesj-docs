@@ -235,6 +235,7 @@ AssetId assetId = node.waitForTransaction(node.broadcast(
 
 BurnTransaction tx = BurnTransaction.builder(Amount.of(100, assetId)).getSignedWith(alice);
 node.waitForTransaction(node.broadcast(tx).id());
+// пример транзакции HXnCkfFg9qqYodSygPgkXdyezZiYxao5fVFtKRfphLUY
 
 BurnTransactionInfo txInfo = node.getTransactionInfo(tx.id(), BurnTransactionInfo.class);
 
@@ -281,6 +282,162 @@ System.out.println("senderPublicKey:" + txInfo.tx().sender().encoded());
 System.out.println("proofs:" + txInfo.tx().proofs());
 System.out.println("assetId:" + txInfo.tx().amount().assetId().encoded());
 System.out.println("amount:" + txInfo.tx().amount().value());
+System.out.println("height:" + txInfo.height());
+System.out.println("applicationStatus:" + txInfo.applicationStatus());
+```
+
+### Exchange transaction (Builder creation)
+```java
+AssetId assetId = node.waitForTransaction(node.broadcast(
+                        IssueTransaction.builder("Asset", 1000, 2).getSignedWith(alice)).id(),
+                IssueTransactionInfo.class).tx().assetId();
+
+Amount amount = Amount.of(1);
+Amount price = Amount.of(100, assetId);
+long matcherFee = 300000;
+Order buy = Order.builder(OrderType.BUY, amount, price, alice.publicKey()).getSignedWith(bob);
+Order sell = Order.builder(OrderType.SELL, amount, price, alice.publicKey()).getSignedWith(alice);
+
+ExchangeTransaction tx = ExchangeTransaction
+        .builder(buy, sell, amount.value(), price.value(), matcherFee, matcherFee).getSignedWith(alice);
+node.waitForTransaction(node.broadcast(tx).id());
+
+ExchangeTransactionInfo txInfo = node.getTransactionInfo(tx.id(), ExchangeTransactionInfo.class);
+
+System.out.println("type:" + txInfo.tx().type());
+System.out.println("id:" + txInfo.tx().id());
+System.out.println("fee:" + txInfo.tx().fee().value());
+System.out.println("feeAssetId:" + txInfo.tx().fee().assetId().encoded());
+System.out.println("timestamp:" + txInfo.tx().timestamp());
+System.out.println("version:" + txInfo.tx().version());
+System.out.println("chainId:" + txInfo.tx().chainId());
+System.out.println("sender:" + txInfo.tx().sender().address().encoded());
+System.out.println("senderPublicKey:" + txInfo.tx().sender().encoded());
+System.out.println("proofs:" + txInfo.tx().proofs());
+
+System.out.println("order1 version:" + txInfo.tx().buyOrder().version());
+System.out.println("order1 id:" + txInfo.tx().buyOrder().id());
+System.out.println("order1 sender:" + txInfo.tx().buyOrder().sender().address().encoded());
+System.out.println("order1 senderPublicKey:" + txInfo.tx().buyOrder().sender().encoded());
+System.out.println("order1 matcherPublicKey:" + txInfo.tx().buyOrder().matcher().encoded());
+System.out.println("order1 assetPair amountAsset:" + txInfo.tx().buyOrder().assetPair().left().encoded());
+System.out.println("order1 assetPair priceAsset:" + txInfo.tx().buyOrder().assetPair().right().encoded());
+System.out.println("order1 orderType:" + txInfo.tx().buyOrder().type());
+System.out.println("order1 amount:" + txInfo.tx().buyOrder().amount().value());
+System.out.println("order1 price:" + txInfo.tx().buyOrder().price().value());
+System.out.println("order1 timestamp:" + txInfo.tx().buyOrder().timestamp());
+System.out.println("order1 expiration:" + txInfo.tx().buyOrder().expiration());
+System.out.println("order1 matcherFee:" + txInfo.tx().buyOrder().fee().value());
+System.out.println("order1 signature:" + txInfo.tx().buyOrder().proofs().get(0));
+System.out.println("order1 proofs:" + txInfo.tx().buyOrder().proofs().get(0));
+System.out.println("order1 matcherFeeAssetId:" + txInfo.tx().buyOrder().fee().assetId().encoded());
+System.out.println("order1 eip712Signature:" + Arrays.toString(txInfo.tx().buyOrder().eip712Signature()));
+
+System.out.println("order2 version:" + txInfo.tx().sellOrder().version());
+System.out.println("order2 id:" + txInfo.tx().sellOrder().id());
+System.out.println("order2 sender:" + txInfo.tx().sellOrder().sender().address().encoded());
+System.out.println("order2 senderPublicKey:" + txInfo.tx().sellOrder().sender().encoded());
+System.out.println("order2 matcherPublicKey:" + txInfo.tx().sellOrder().matcher().encoded());
+System.out.println("order2 assetPair amountAsset:" + txInfo.tx().sellOrder().assetPair().left().encoded());
+System.out.println("order2 assetPair priceAsset:" + txInfo.tx().sellOrder().assetPair().right().encoded());
+System.out.println("order2 orderType:" + txInfo.tx().sellOrder().type());
+System.out.println("order2 amount:" + txInfo.tx().sellOrder().amount().value());
+System.out.println("order2 price:" + txInfo.tx().sellOrder().price().value());
+System.out.println("order2 timestamp:" + txInfo.tx().sellOrder().timestamp());
+System.out.println("order2 expiration:" + txInfo.tx().sellOrder().expiration());
+System.out.println("order2 matcherFee:" + txInfo.tx().sellOrder().fee().value());
+System.out.println("order2 signature:" + txInfo.tx().sellOrder().proofs().get(0));
+System.out.println("order2 proofs:" + txInfo.tx().sellOrder().proofs().get(0));
+System.out.println("order2 matcherFeeAssetId:" + txInfo.tx().sellOrder().fee().assetId().encoded());
+System.out.println("order2 eip712Signature:" + Arrays.toString(txInfo.tx().sellOrder().eip712Signature()));
+
+System.out.println("amount:" + txInfo.tx().amount());
+System.out.println("price:" + txInfo.tx().price());
+System.out.println("buyMatcherFee:" + txInfo.tx().buyMatcherFee());
+System.out.println("sellMatcherFee:" + txInfo.tx().sellMatcherFee());
+
+System.out.println("height:" + txInfo.height());
+System.out.println("applicationStatus:" + txInfo.applicationStatus());
+```
+
+### Exchange transaction (Constructor creation)
+```java
+AssetId assetId = node.waitForTransaction(node.broadcast(
+                        IssueTransaction.builder("Asset", 1000, 2).getSignedWith(alice)).id(),
+                IssueTransactionInfo.class).tx().assetId();
+
+Amount amount = Amount.of(1);
+Amount price = Amount.of(100, assetId);
+long matcherFee = 300000;
+
+Order buy = new Order(bob.publicKey(), OrderType.BUY, amount, price, alice.publicKey()).addProof(bob);
+Order sell = new Order(alice.publicKey(), OrderType.SELL, amount, price, alice.publicKey()).addProof(alice);
+
+ExchangeTransaction tx = new ExchangeTransaction(
+        alice.publicKey(),
+        buy,
+        sell,
+        amount.value(),
+        price.value(),
+        matcherFee,
+        matcherFee
+).addProof(alice);
+node.waitForTransaction(node.broadcast(tx).id());
+        
+ExchangeTransactionInfo txInfo = node.getTransactionInfo(tx.id(), ExchangeTransactionInfo.class);
+
+System.out.println("type:" + txInfo.tx().type());
+System.out.println("id:" + txInfo.tx().id());
+System.out.println("fee:" + txInfo.tx().fee().value());
+System.out.println("feeAssetId:" + txInfo.tx().fee().assetId().encoded());
+System.out.println("timestamp:" + txInfo.tx().timestamp());
+System.out.println("version:" + txInfo.tx().version());
+System.out.println("chainId:" + txInfo.tx().chainId());
+System.out.println("sender:" + txInfo.tx().sender().address().encoded());
+System.out.println("senderPublicKey:" + txInfo.tx().sender().encoded());
+System.out.println("proofs:" + txInfo.tx().proofs());
+
+System.out.println("order1 version:" + txInfo.tx().buyOrder().version());
+System.out.println("order1 id:" + txInfo.tx().buyOrder().id());
+System.out.println("order1 sender:" + txInfo.tx().buyOrder().sender().address().encoded());
+System.out.println("order1 senderPublicKey:" + txInfo.tx().buyOrder().sender().encoded());
+System.out.println("order1 matcherPublicKey:" + txInfo.tx().buyOrder().matcher().encoded());
+System.out.println("order1 assetPair amountAsset:" + txInfo.tx().buyOrder().assetPair().left().encoded());
+System.out.println("order1 assetPair priceAsset:" + txInfo.tx().buyOrder().assetPair().right().encoded());
+System.out.println("order1 orderType:" + txInfo.tx().buyOrder().type());
+System.out.println("order1 amount:" + txInfo.tx().buyOrder().amount().value());
+System.out.println("order1 price:" + txInfo.tx().buyOrder().price().value());
+System.out.println("order1 timestamp:" + txInfo.tx().buyOrder().timestamp());
+System.out.println("order1 expiration:" + txInfo.tx().buyOrder().expiration());
+System.out.println("order1 matcherFee:" + txInfo.tx().buyOrder().fee().value());
+System.out.println("order1 signature:" + txInfo.tx().buyOrder().proofs().get(0));
+System.out.println("order1 proofs:" + txInfo.tx().buyOrder().proofs().get(0));
+System.out.println("order1 matcherFeeAssetId:" + txInfo.tx().buyOrder().fee().assetId().encoded());
+System.out.println("order1 eip712Signature:" + Arrays.toString(txInfo.tx().buyOrder().eip712Signature()));
+
+System.out.println("order2 version:" + txInfo.tx().sellOrder().version());
+System.out.println("order2 id:" + txInfo.tx().sellOrder().id());
+System.out.println("order2 sender:" + txInfo.tx().sellOrder().sender().address().encoded());
+System.out.println("order2 senderPublicKey:" + txInfo.tx().sellOrder().sender().encoded());
+System.out.println("order2 matcherPublicKey:" + txInfo.tx().sellOrder().matcher().encoded());
+System.out.println("order2 assetPair amountAsset:" + txInfo.tx().sellOrder().assetPair().left().encoded());
+System.out.println("order2 assetPair priceAsset:" + txInfo.tx().sellOrder().assetPair().right().encoded());
+System.out.println("order2 orderType:" + txInfo.tx().sellOrder().type());
+System.out.println("order2 amount:" + txInfo.tx().sellOrder().amount().value());
+System.out.println("order2 price:" + txInfo.tx().sellOrder().price().value());
+System.out.println("order2 timestamp:" + txInfo.tx().sellOrder().timestamp());
+System.out.println("order2 expiration:" + txInfo.tx().sellOrder().expiration());
+System.out.println("order2 matcherFee:" + txInfo.tx().sellOrder().fee().value());
+System.out.println("order2 signature:" + txInfo.tx().sellOrder().proofs().get(0));
+System.out.println("order2 proofs:" + txInfo.tx().sellOrder().proofs().get(0));
+System.out.println("order2 matcherFeeAssetId:" + txInfo.tx().sellOrder().fee().assetId().encoded());
+System.out.println("order2 eip712Signature:" + Arrays.toString(txInfo.tx().sellOrder().eip712Signature()));
+
+System.out.println("amount:" + txInfo.tx().amount());
+System.out.println("price:" + txInfo.tx().price());
+System.out.println("buyMatcherFee:" + txInfo.tx().buyMatcherFee());
+System.out.println("sellMatcherFee:" + txInfo.tx().sellMatcherFee());
+
 System.out.println("height:" + txInfo.height());
 System.out.println("applicationStatus:" + txInfo.applicationStatus());
 ```
