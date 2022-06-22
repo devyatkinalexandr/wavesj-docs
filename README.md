@@ -154,3 +154,135 @@ System.out.println("height:" + txInfo.height());
 System.out.println("applicationStatus:" + txInfo.applicationStatus());
 ```
 
+### Reissue transaction (Builder creation)
+```java
+// создаем ассет
+AssetId assetId = node.waitForTransaction(node.broadcast(
+        IssueTransaction.builder("Asset", 1000, 2).getSignedWith(alice)).id(),
+        IssueTransactionInfo.class)
+        .tx().assetId();
+
+// создаем транзакцию довыпуска и подписываем приватным ключем Алисы
+ReissueTransaction tx = ReissueTransaction.builder(Amount.of(1000, assetId)).getSignedWith(alice);
+
+// ждем
+node.waitForTransaction(node.broadcast(tx).id());
+
+// пример транзакции GSFk5Ziwx33g8KuMyh6wYerxJcHXdcGgXFiBYXH58AE6
+
+// читаем
+ReissueTransactionInfo txInfo = node.getTransactionInfo(tx.id(), ReissueTransactionInfo.class);
+
+System.out.println("type:" + txInfo.tx().type());
+System.out.println("id:" + txInfo.tx().id());
+System.out.println("fee:" + txInfo.tx().fee().value());
+System.out.println("feeAssetId:" + txInfo.tx().fee().assetId().encoded());
+System.out.println("timestamp:" + txInfo.tx().timestamp());
+System.out.println("version:" + txInfo.tx().version());
+System.out.println("chainId:" + txInfo.tx().chainId());
+System.out.println("sender:" + txInfo.tx().sender().address().encoded());
+System.out.println("senderPublicKey:" + txInfo.tx().sender().encoded());
+System.out.println("proofs:" + txInfo.tx().proofs());
+System.out.println("assetId:" + txInfo.tx().amount().assetId().encoded());
+System.out.println("quantity:" + txInfo.tx().amount().value());
+System.out.println("reissuable:" + txInfo.tx().reissuable());
+System.out.println("height:" + txInfo.height());
+System.out.println("applicationStatus:" + txInfo.applicationStatus());
+
+```
+
+### Reissue transaction (Constructor creation)
+```java
+AssetId assetId = node.waitForTransaction(node.broadcast(
+                        IssueTransaction.builder("Asset", 1000, 2).getSignedWith(alice)).id(),
+                IssueTransactionInfo.class).tx().assetId();
+
+ReissueTransaction tx = new ReissueTransaction(
+        alice.publicKey(),
+        Amount.of(1000, assetId),
+        true
+).addProof(alice);
+
+// ждем
+node.waitForTransaction(node.broadcast(tx).id());
+
+// читаем
+ReissueTransactionInfo txInfo = node.getTransactionInfo(tx.id(), ReissueTransactionInfo.class);
+
+System.out.println("type:" + txInfo.tx().type());
+System.out.println("id:" + txInfo.tx().id());
+System.out.println("fee:" + txInfo.tx().fee().value());
+System.out.println("feeAssetId:" + txInfo.tx().fee().assetId().encoded());
+System.out.println("timestamp:" + txInfo.tx().timestamp());
+System.out.println("version:" + txInfo.tx().version());
+System.out.println("chainId:" + txInfo.tx().chainId());
+System.out.println("sender:" + txInfo.tx().sender().address().encoded());
+System.out.println("senderPublicKey:" + txInfo.tx().sender().encoded());
+System.out.println("proofs:" + txInfo.tx().proofs());
+System.out.println("assetId:" + txInfo.tx().amount().assetId().encoded());
+System.out.println("quantity:" + txInfo.tx().amount().value());
+System.out.println("reissuable:" + txInfo.tx().reissuable());
+System.out.println("height:" + txInfo.height());
+System.out.println("applicationStatus:" + txInfo.applicationStatus());
+
+```
+
+### Burn transaction (Builder creation)
+```java
+AssetId assetId = node.waitForTransaction(node.broadcast(
+                        IssueTransaction.builder("Asset", 1000, 2).getSignedWith(alice)).id(),
+                IssueTransactionInfo.class).tx().assetId();
+
+BurnTransaction tx = BurnTransaction.builder(Amount.of(100, assetId)).getSignedWith(alice);
+node.waitForTransaction(node.broadcast(tx).id());
+
+BurnTransactionInfo txInfo = node.getTransactionInfo(tx.id(), BurnTransactionInfo.class);
+
+System.out.println("type:" + txInfo.tx().type());
+System.out.println("id:" + txInfo.tx().id());
+System.out.println("fee:" + txInfo.tx().fee().value());
+System.out.println("feeAssetId:" + txInfo.tx().fee().assetId().encoded());
+System.out.println("timestamp:" + txInfo.tx().timestamp());
+System.out.println("version:" + txInfo.tx().version());
+System.out.println("chainId:" + txInfo.tx().chainId());
+System.out.println("sender:" + txInfo.tx().sender().address().encoded());
+System.out.println("senderPublicKey:" + txInfo.tx().sender().encoded());
+System.out.println("proofs:" + txInfo.tx().proofs());
+System.out.println("assetId:" + txInfo.tx().amount().assetId().encoded());
+System.out.println("amount:" + txInfo.tx().amount().value());
+System.out.println("height:" + txInfo.height());
+System.out.println("applicationStatus:" + txInfo.applicationStatus());
+```
+
+### Burn transaction (Constructor creation)
+```java
+AssetId assetId = node.waitForTransaction(node.broadcast(
+                        IssueTransaction.builder("Asset", 1000, 2).getSignedWith(alice)).id(),
+                IssueTransactionInfo.class).tx().assetId();
+
+BurnTransaction tx = new BurnTransaction(
+        alice.publicKey(), 
+        new Amount(100, assetId)
+).addProof(alice);
+
+node.waitForTransaction(node.broadcast(tx).id());
+
+BurnTransactionInfo txInfo = node.getTransactionInfo(tx.id(), BurnTransactionInfo.class);
+
+System.out.println("type:" + txInfo.tx().type());
+System.out.println("id:" + txInfo.tx().id());
+System.out.println("fee:" + txInfo.tx().fee().value());
+System.out.println("feeAssetId:" + txInfo.tx().fee().assetId().encoded());
+System.out.println("timestamp:" + txInfo.tx().timestamp());
+System.out.println("version:" + txInfo.tx().version());
+System.out.println("chainId:" + txInfo.tx().chainId());
+System.out.println("sender:" + txInfo.tx().sender().address().encoded());
+System.out.println("senderPublicKey:" + txInfo.tx().sender().encoded());
+System.out.println("proofs:" + txInfo.tx().proofs());
+System.out.println("assetId:" + txInfo.tx().amount().assetId().encoded());
+System.out.println("amount:" + txInfo.tx().amount().value());
+System.out.println("height:" + txInfo.height());
+System.out.println("applicationStatus:" + txInfo.applicationStatus());
+```
+
+
