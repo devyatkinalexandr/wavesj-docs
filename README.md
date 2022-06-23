@@ -679,6 +679,59 @@ System.out.println("height:" + txInfo.height());
 System.out.println("applicationStatus:" + txInfo.applicationStatus());
 ```
 
+### Data transaction (Builder creation)
+```java
+DataTransaction tx = DataTransaction.builder(StringEntry.as("str", alice.address().toString())).getSignedWith(alice);
+node.waitForTransaction(node.broadcast(tx).id());
+
+TransactionInfo commonInfo = node.getTransactionInfo(tx.id());
+DataTransactionInfo txInfo = node.getTransactionInfo(tx.id(), DataTransactionInfo.class);
+
+System.out.println("type:" + txInfo.tx().type());
+System.out.println("id:" + txInfo.tx().id());
+System.out.println("fee:" + txInfo.tx().fee().value());
+System.out.println("feeAssetId:" + txInfo.tx().fee().assetId().encoded());
+System.out.println("timestamp:" + txInfo.tx().timestamp());
+System.out.println("version:" + txInfo.tx().version());
+System.out.println("chainId:" + txInfo.tx().chainId());
+System.out.println("sender:" + txInfo.tx().sender().address().encoded());
+System.out.println("senderPublicKey:" + txInfo.tx().sender().encoded());
+System.out.println("proofs:" + txInfo.tx().proofs());
+System.out.println("data key:" + txInfo.tx().data().get(0).key());
+System.out.println("data type:" + txInfo.tx().data().get(0).type().name());
+System.out.println("data value:" + txInfo.tx().data().get(0).valueAsObject());
+System.out.println("height:" + txInfo.height());
+System.out.println("applicationStatus:" + txInfo.applicationStatus());
+```
+
+### Data transaction (Constructor creation)
+```java
+DataTransaction tx = new DataTransaction(
+                alice.publicKey(), 
+                Collections.singletonList(StringEntry.as("str", alice.address().encoded()))
+).addProof(alice);
+node.waitForTransaction(node.broadcast(tx).id());
+
+TransactionInfo commonInfo = node.getTransactionInfo(tx.id());
+DataTransactionInfo txInfo = node.getTransactionInfo(tx.id(), DataTransactionInfo.class);
+
+System.out.println("type:" + txInfo.tx().type());
+System.out.println("id:" + txInfo.tx().id());
+System.out.println("fee:" + txInfo.tx().fee().value());
+System.out.println("feeAssetId:" + txInfo.tx().fee().assetId().encoded());
+System.out.println("timestamp:" + txInfo.tx().timestamp());
+System.out.println("version:" + txInfo.tx().version());
+System.out.println("chainId:" + txInfo.tx().chainId());
+System.out.println("sender:" + txInfo.tx().sender().address().encoded());
+System.out.println("senderPublicKey:" + txInfo.tx().sender().encoded());
+System.out.println("proofs:" + txInfo.tx().proofs());
+System.out.println("data key:" + txInfo.tx().data().get(0).key());
+System.out.println("data type:" + txInfo.tx().data().get(0).type().name());
+System.out.println("data value:" + txInfo.tx().data().get(0).valueAsObject());
+System.out.println("height:" + txInfo.height());
+System.out.println("applicationStatus:" + txInfo.applicationStatus());
+```
+
 
 
 
