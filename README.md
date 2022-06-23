@@ -492,7 +492,7 @@ System.out.println("height:" + txInfo.height());
 System.out.println("applicationStatus:" + txInfo.applicationStatus());
 ```
 
-### Lease cancel (Builder creation)
+### Lease cancel transaction (Builder creation)
 ```java
 long amount = 1000;
 
@@ -530,7 +530,7 @@ System.out.println("lease cancelHeight:" + txInfo.leaseInfo().cancelHeight().get
 System.out.println("lease cancelTransactionId:" + txInfo.leaseInfo().cancelTransactionId().get().encoded());
 ```
 
-### Lease cancel (Constructor creation)
+### Lease cancel transaction (Constructor creation)
 ```java
 long amount = 1000;
 
@@ -567,6 +567,57 @@ System.out.println("lease status:" + txInfo.leaseInfo().status().toString());
 System.out.println("lease cancelHeight:" + txInfo.leaseInfo().cancelHeight().getAsInt());
 System.out.println("lease cancelTransactionId:" + txInfo.leaseInfo().cancelTransactionId().get().encoded());
 ```
+
+### Create alias transaction (Builder creation)
+```java
+Alias alias = Alias.as("alice_" + System.currentTimeMillis());
+
+CreateAliasTransaction tx = CreateAliasTransaction.builder(alias.toString()).getSignedWith(alice);
+node.waitForTransaction(node.broadcast(tx).id());
+
+TransactionInfo commonInfo = node.getTransactionInfo(tx.id());
+CreateAliasTransactionInfo txInfo = node.getTransactionInfo(tx.id(), CreateAliasTransactionInfo.class);
+
+System.out.println("type:" + txInfo.tx().type());
+System.out.println("id:" + txInfo.tx().id());
+System.out.println("fee:" + txInfo.tx().fee().value());
+System.out.println("feeAssetId:" + txInfo.tx().fee().assetId().encoded());
+System.out.println("timestamp:" + txInfo.tx().timestamp());
+System.out.println("version:" + txInfo.tx().version());
+System.out.println("chainId:" + txInfo.tx().chainId());
+System.out.println("sender:" + txInfo.tx().sender().address().encoded());
+System.out.println("senderPublicKey:" + txInfo.tx().sender().encoded());
+System.out.println("proofs:" + txInfo.tx().proofs());
+System.out.println("alias:" + txInfo.tx().alias().toString());
+System.out.println("height:" + txInfo.height());
+System.out.println("applicationStatus:" + txInfo.applicationStatus());
+```
+
+### Create alias transaction (Constructor creation)
+```java
+Alias alias = Alias.as("alice_" + System.currentTimeMillis());
+        
+CreateAliasTransaction tx = new CreateAliasTransaction(alice.publicKey(), alias.toString()).addProof(alice);;
+node.waitForTransaction(node.broadcast(tx).id());
+
+TransactionInfo commonInfo = node.getTransactionInfo(tx.id());
+CreateAliasTransactionInfo txInfo = node.getTransactionInfo(tx.id(), CreateAliasTransactionInfo.class);
+
+System.out.println("type:" + txInfo.tx().type());
+System.out.println("id:" + txInfo.tx().id());
+System.out.println("fee:" + txInfo.tx().fee().value());
+System.out.println("feeAssetId:" + txInfo.tx().fee().assetId().encoded());
+System.out.println("timestamp:" + txInfo.tx().timestamp());
+System.out.println("version:" + txInfo.tx().version());
+System.out.println("chainId:" + txInfo.tx().chainId());
+System.out.println("sender:" + txInfo.tx().sender().address().encoded());
+System.out.println("senderPublicKey:" + txInfo.tx().sender().encoded());
+System.out.println("proofs:" + txInfo.tx().proofs());
+System.out.println("alias:" + txInfo.tx().alias().toString());
+System.out.println("height:" + txInfo.height());
+System.out.println("applicationStatus:" + txInfo.applicationStatus());
+```
+
 
 
 
