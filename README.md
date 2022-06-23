@@ -618,6 +618,67 @@ System.out.println("height:" + txInfo.height());
 System.out.println("applicationStatus:" + txInfo.applicationStatus());
 ```
 
+### Mass transfer transaction (Builder creation)
+```java
+MassTransferTransaction tx = MassTransferTransaction.builder(Transfer.to(bob.address(), 1000)).getSignedWith(alice);
+node.waitForTransaction(node.broadcast(tx).id());
+
+TransactionInfo commonInfo = node.getTransactionInfo(tx.id());
+MassTransferTransactionInfo txInfo = node.getTransactionInfo(tx.id(), MassTransferTransactionInfo.class);
+
+System.out.println("type:" + txInfo.tx().type());
+System.out.println("id:" + txInfo.tx().id());
+System.out.println("fee:" + txInfo.tx().fee().value());
+System.out.println("feeAssetId:" + txInfo.tx().fee().assetId().encoded());
+System.out.println("timestamp:" + txInfo.tx().timestamp());
+System.out.println("version:" + txInfo.tx().version());
+System.out.println("chainId:" + txInfo.tx().chainId());
+System.out.println("sender:" + txInfo.tx().sender().address().encoded());
+System.out.println("senderPublicKey:" + txInfo.tx().sender().encoded());
+System.out.println("proofs:" + txInfo.tx().proofs());
+System.out.println("assetId:" + txInfo.tx().assetId().encoded());
+System.out.println("attachment:" + txInfo.tx().attachment().encoded());
+System.out.println("transferCount:" + txInfo.tx().transfers().size());
+System.out.println("totalAmount:" + txInfo.tx().total());
+System.out.println("transfers recipient:" + txInfo.tx().transfers().get(0).recipient().toString());
+System.out.println("transfers amount:" + txInfo.tx().transfers().get(0).amount());
+System.out.println("height:" + txInfo.height());
+System.out.println("applicationStatus:" + txInfo.applicationStatus());
+```
+
+### Mass transfer transaction (Constructor creation)
+```java
+MassTransferTransaction tx = new MassTransferTransaction(
+                alice.publicKey(),
+                AssetId.WAVES,
+                Collections.singletonList(Transfer.to(bob.address(), 1000)),
+                null)
+                .addProof(alice);
+node.waitForTransaction(node.broadcast(tx).id());
+
+TransactionInfo commonInfo = node.getTransactionInfo(tx.id());
+MassTransferTransactionInfo txInfo = node.getTransactionInfo(tx.id(), MassTransferTransactionInfo.class);
+
+System.out.println("type:" + txInfo.tx().type());
+System.out.println("id:" + txInfo.tx().id());
+System.out.println("fee:" + txInfo.tx().fee().value());
+System.out.println("feeAssetId:" + txInfo.tx().fee().assetId().encoded());
+System.out.println("timestamp:" + txInfo.tx().timestamp());
+System.out.println("version:" + txInfo.tx().version());
+System.out.println("chainId:" + txInfo.tx().chainId());
+System.out.println("sender:" + txInfo.tx().sender().address().encoded());
+System.out.println("senderPublicKey:" + txInfo.tx().sender().encoded());
+System.out.println("proofs:" + txInfo.tx().proofs());
+System.out.println("assetId:" + txInfo.tx().assetId().encoded());
+System.out.println("attachment:" + txInfo.tx().attachment().encoded());
+System.out.println("transferCount:" + txInfo.tx().transfers().size());
+System.out.println("totalAmount:" + txInfo.tx().total());
+System.out.println("transfers recipient:" + txInfo.tx().transfers().get(0).recipient().toString());
+System.out.println("transfers amount:" + txInfo.tx().transfers().get(0).amount());
+System.out.println("height:" + txInfo.height());
+System.out.println("applicationStatus:" + txInfo.applicationStatus());
+```
+
 
 
 
