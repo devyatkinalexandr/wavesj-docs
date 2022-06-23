@@ -492,4 +492,81 @@ System.out.println("height:" + txInfo.height());
 System.out.println("applicationStatus:" + txInfo.applicationStatus());
 ```
 
+### Lease cancel (Builder creation)
+```java
+long amount = 1000;
+
+LeaseTransaction leaseTx = LeaseTransaction.builder(bob.address(), amount).getSignedWith(alice);
+int leaseHeight = node.waitForTransaction(node.broadcast(leaseTx).id()).height();
+
+LeaseCancelTransaction tx = LeaseCancelTransaction.builder(leaseTx.id()).getSignedWith(alice);
+node.waitForTransaction(node.broadcast(tx).id());
+
+TransactionInfo commonInfo = node.getTransactionInfo(tx.id());
+LeaseCancelTransactionInfo txInfo = node.getTransactionInfo(tx.id(), LeaseCancelTransactionInfo.class);
+
+System.out.println("type:" + txInfo.tx().type());
+System.out.println("id:" + txInfo.tx().id());
+System.out.println("fee:" + txInfo.tx().fee().value());
+System.out.println("feeAssetId:" + txInfo.tx().fee().assetId().encoded());
+System.out.println("timestamp:" + txInfo.tx().timestamp());
+System.out.println("version:" + txInfo.tx().version());
+System.out.println("chainId:" + txInfo.tx().chainId());
+System.out.println("sender:" + txInfo.tx().sender().address().encoded());
+System.out.println("senderPublicKey:" + txInfo.tx().sender().encoded());
+System.out.println("proofs:" + txInfo.tx().proofs());
+System.out.println("leaseId:" + txInfo.tx().leaseId().encoded());
+System.out.println("height:" + txInfo.height());
+System.out.println("applicationStatus:" + txInfo.applicationStatus());
+System.out.println("lease id:" + txInfo.leaseInfo().id().encoded());
+System.out.println("lease originTransactionId:" + txInfo.leaseInfo().originTransactionId().encoded());
+System.out.println("lease sender:" + txInfo.leaseInfo().sender().encoded());
+System.out.println("lease recipient:" + txInfo.leaseInfo().recipient().toString());
+System.out.println("lease recipient:" + txInfo.leaseInfo().recipient().toString());
+System.out.println("lease amount:" + txInfo.leaseInfo().amount());
+System.out.println("lease height:" + txInfo.leaseInfo().height());
+System.out.println("lease status:" + txInfo.leaseInfo().status().toString());
+System.out.println("lease cancelHeight:" + txInfo.leaseInfo().cancelHeight().getAsInt());
+System.out.println("lease cancelTransactionId:" + txInfo.leaseInfo().cancelTransactionId().get().encoded());
+```
+
+### Lease cancel (Constructor creation)
+```java
+long amount = 1000;
+
+LeaseTransaction leaseTx = new LeaseTransaction(alice.publicKey(), bob.address(), amount).addProof(alice);
+int leaseHeight = node.waitForTransaction(node.broadcast(leaseTx).id()).height();
+
+LeaseCancelTransaction tx = new LeaseCancelTransaction(alice.publicKey(), leaseTx.id()).addProof(alice);
+node.waitForTransaction(node.broadcast(tx).id());
+
+TransactionInfo commonInfo = node.getTransactionInfo(tx.id());
+LeaseCancelTransactionInfo txInfo = node.getTransactionInfo(tx.id(), LeaseCancelTransactionInfo.class);
+
+System.out.println("type:" + txInfo.tx().type());
+System.out.println("id:" + txInfo.tx().id());
+System.out.println("fee:" + txInfo.tx().fee().value());
+System.out.println("feeAssetId:" + txInfo.tx().fee().assetId().encoded());
+System.out.println("timestamp:" + txInfo.tx().timestamp());
+System.out.println("version:" + txInfo.tx().version());
+System.out.println("chainId:" + txInfo.tx().chainId());
+System.out.println("sender:" + txInfo.tx().sender().address().encoded());
+System.out.println("senderPublicKey:" + txInfo.tx().sender().encoded());
+System.out.println("proofs:" + txInfo.tx().proofs());
+System.out.println("leaseId:" + txInfo.tx().leaseId().encoded());
+System.out.println("height:" + txInfo.height());
+System.out.println("applicationStatus:" + txInfo.applicationStatus());
+System.out.println("lease id:" + txInfo.leaseInfo().id().encoded());
+System.out.println("lease originTransactionId:" + txInfo.leaseInfo().originTransactionId().encoded());
+System.out.println("lease sender:" + txInfo.leaseInfo().sender().encoded());
+System.out.println("lease recipient:" + txInfo.leaseInfo().recipient().toString());
+System.out.println("lease recipient:" + txInfo.leaseInfo().recipient().toString());
+System.out.println("lease amount:" + txInfo.leaseInfo().amount());
+System.out.println("lease height:" + txInfo.leaseInfo().height());
+System.out.println("lease status:" + txInfo.leaseInfo().status().toString());
+System.out.println("lease cancelHeight:" + txInfo.leaseInfo().cancelHeight().getAsInt());
+System.out.println("lease cancelTransactionId:" + txInfo.leaseInfo().cancelTransactionId().get().encoded());
+```
+
+
 
