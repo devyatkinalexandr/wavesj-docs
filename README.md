@@ -938,6 +938,11 @@ InvokeScriptTransaction tx = InvokeScriptTransaction
         .getSignedWith(alice);
 node.waitForTransaction(node.broadcast(tx).id());
 
+InvokeScriptTransactionInfo txInfo = node.getTransactionInfo(
+        new Id("68qf34fyrKSRWP95kaLnS1kysLJKXuM14E1qtr3WAky7"),
+        InvokeScriptTransactionInfo.class
+);
+
 System.out.println("type:" + txInfo.tx().type());
 System.out.println("id:" + txInfo.tx().id());
 System.out.println("fee:" + txInfo.tx().fee().value());
@@ -1019,6 +1024,11 @@ InvokeScriptTransaction tx = new InvokeScriptTransaction(
 )
         .addProof(alice);
 node.waitForTransaction(node.broadcast(tx).id());
+
+InvokeScriptTransactionInfo txInfo = node.getTransactionInfo(
+        new Id("68qf34fyrKSRWP95kaLnS1kysLJKXuM14E1qtr3WAky7"),
+        InvokeScriptTransactionInfo.class
+);
 
 System.out.println("type:" + txInfo.tx().type());
 System.out.println("id:" + txInfo.tx().id());
