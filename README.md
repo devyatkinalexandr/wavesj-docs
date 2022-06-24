@@ -884,43 +884,6 @@ System.out.println("height:" + txInfo.height());
 System.out.println("applicationStatus:" + txInfo.applicationStatus());
 ```
 
-### Update asset info transaction (Builder creation)
-```java
-AssetId assetId = node.waitForTransaction(node.broadcast(
-                        IssueTransaction.builder("Asset", 1000, 2).getSignedWith(alice)).id(),
-                IssueTransactionInfo.class).tx().assetId();
-
-node.waitBlocks(2);
-
-UpdateAssetInfoTransaction tx = UpdateAssetInfoTransaction
-                .builder(assetId, "New Asset", "New description").getSignedWith(alice);
-node.waitForTransaction(node.broadcast(tx).id());
-```
-
-### Update asset info transaction (Constructor creation)
-```java
-IssueTransaction tx = new IssueTransaction(
-        alice.publicKey(),
-        "Asset",
-        "",
-        1000,
-        2,
-        true,
-        Base64String.empty())
-        .addProof(alice);
-AssetId assetId = node.waitForTransaction(node.broadcast(tx).id(), IssueTransactionInfo.class).tx().assetId();
-
-node.waitBlocks(2);
-        
-UpdateAssetInfoTransaction tx = new UpdateAssetInfoTransaction(
-        alice.publicKey(), 
-        assetId, 
-        "New Asset", 
-        "New description"
-).addProof(alice);
-node.waitForTransaction(node.broadcast(tx).id());
-```
-
 ### Invoke script transaction (Builder creation)
 ```java
 AssetId assetId = node.waitForTransaction(node.broadcast(
@@ -1096,6 +1059,75 @@ System.out.println("call args:" + txInfo.tx().function().args());
 System.out.println("height:" + txInfo.height());
 System.out.println("applicationStatus:" + txInfo.applicationStatus());
 System.out.println("state changes:" + txInfo.stateChanges().toString());
+```
+
+### Update asset info transaction (Builder creation)
+```java
+AssetId assetId = node.waitForTransaction(node.broadcast(
+                        IssueTransaction.builder("Asset", 1000, 2).getSignedWith(alice)).id(),
+                IssueTransactionInfo.class).tx().assetId();
+
+node.waitBlocks(2);
+
+UpdateAssetInfoTransaction tx = UpdateAssetInfoTransaction
+                .builder(assetId, "New Asset", "New description").getSignedWith(alice);
+node.waitForTransaction(node.broadcast(tx).id());
+
+System.out.println("type:" + txInfo.tx().type());
+System.out.println("id:" + txInfo.tx().id());
+System.out.println("fee:" + txInfo.tx().fee().value());
+System.out.println("feeAssetId:" + txInfo.tx().fee().assetId().encoded());
+System.out.println("timestamp:" + txInfo.tx().timestamp());
+System.out.println("version:" + txInfo.tx().version());
+System.out.println("chainId:" + txInfo.tx().chainId());
+System.out.println("sender:" + txInfo.tx().sender().address().encoded());
+System.out.println("senderPublicKey:" + txInfo.tx().sender().encoded());
+System.out.println("proofs:" + txInfo.tx().proofs());
+System.out.println("assetId:" + txInfo.tx().assetId().encoded());
+System.out.println("name:" + txInfo.tx().name());
+System.out.println("description:" + txInfo.tx().description());
+System.out.println("height:" + txInfo.height());
+System.out.println("applicationStatus:" + txInfo.applicationStatus());
+```
+
+### Update asset info transaction (Constructor creation)
+```java
+IssueTransaction tx = new IssueTransaction(
+        alice.publicKey(),
+        "Asset",
+        "",
+        1000,
+        2,
+        true,
+        Base64String.empty())
+        .addProof(alice);
+AssetId assetId = node.waitForTransaction(node.broadcast(tx).id(), IssueTransactionInfo.class).tx().assetId();
+
+node.waitBlocks(2);
+        
+UpdateAssetInfoTransaction tx = new UpdateAssetInfoTransaction(
+        alice.publicKey(), 
+        assetId, 
+        "New Asset", 
+        "New description"
+).addProof(alice);
+node.waitForTransaction(node.broadcast(tx).id());
+
+System.out.println("type:" + txInfo.tx().type());
+System.out.println("id:" + txInfo.tx().id());
+System.out.println("fee:" + txInfo.tx().fee().value());
+System.out.println("feeAssetId:" + txInfo.tx().fee().assetId().encoded());
+System.out.println("timestamp:" + txInfo.tx().timestamp());
+System.out.println("version:" + txInfo.tx().version());
+System.out.println("chainId:" + txInfo.tx().chainId());
+System.out.println("sender:" + txInfo.tx().sender().address().encoded());
+System.out.println("senderPublicKey:" + txInfo.tx().sender().encoded());
+System.out.println("proofs:" + txInfo.tx().proofs());
+System.out.println("assetId:" + txInfo.tx().assetId().encoded());
+System.out.println("name:" + txInfo.tx().name());
+System.out.println("description:" + txInfo.tx().description());
+System.out.println("height:" + txInfo.height());
+System.out.println("applicationStatus:" + txInfo.applicationStatus());
 ```
 
 
