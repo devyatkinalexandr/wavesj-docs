@@ -1130,6 +1130,50 @@ System.out.println("height:" + txInfo.height());
 System.out.println("applicationStatus:" + txInfo.applicationStatus());
 ```
 
+### Ethereum transfer transaction
+```java
+Credentials charlie = MetamaskHelper.generateCredentials("some mnemonic");
+String bobAddress = WavesEthConverter.ethToWavesAddress(charlie.getAddress(), ChainId.TESTNET);
+
+TransferTransaction tx = TransferTransaction.builder(new Address(bobAddress), Amount.of(1_00_000_000)).getSignedWith(alice);
+node.waitForTransaction(node.broadcast(tx).id());
+
+EthereumTransaction transferTx = EthereumTransaction.createAndSign(
+        new EthereumTransaction.Transfer(
+                new Address(alice.address().encoded()),
+                new Amount(1000, AssetId.WAVES)
+        ),
+        DEFAULT_GAS_PRICE,
+        WavesConfig.chainId(),
+        100000L,
+        Instant.now().toEpochMilli(),
+        charlie.getEcKeyPair()
+);
+
+EthRpcResponse rs = node.broadcastEthTransaction(transferTx);
+node.waitForTransaction(transferTx.id());
+EthereumTransactionInfo ethTxInfo = node.getTransactionInfo(transferTx.id(), EthereumTransactionInfo.class);
+
+EthereumTransaction.Transfer payload = (EthereumTransaction.Transfer) ethTxInfo.tx().payload();
+
+System.out.println("isTransfer transaction:" + ethTxInfo.isTransferTransaction());
+System.out.println("type:" + ethTxInfo.tx().type());
+System.out.println("id:" + ethTxInfo.tx().id());
+System.out.println("fee:" + ethTxInfo.tx().fee().value());
+System.out.println("feeAssetId:" + ethTxInfo.tx().fee().assetId().encoded());
+System.out.println("timestamp:" + ethTxInfo.tx().timestamp());
+System.out.println("version:" + ethTxInfo.tx().version());
+System.out.println("chainId:" + ethTxInfo.tx().chainId());
+System.out.println("sender:" + ethTxInfo.tx().sender().address().encoded());
+System.out.println("senderPublicKey:" + ethTxInfo.tx().sender().encoded());
+System.out.println("proofs:" + ethTxInfo.tx().proofs());
+System.out.println("payload recipient:" + payload.recipient().encoded());
+System.out.println("payload asset:" + payload.amount().assetId().encoded());
+System.out.println("payload amount:" + payload.amount().value());
+System.out.println("asset:" + payload.amount().assetId().encoded());
+System.out.println("height:" + ethTxInfo.height());
+System.out.println("applicationStatus:" + ethTxInfo.applicationStatus());
+```
 
 
 
