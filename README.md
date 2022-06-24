@@ -193,9 +193,16 @@ System.out.println("applicationStatus:" + txInfo.applicationStatus());
 
 ### Reissue transaction (Constructor creation)
 ```java
-AssetId assetId = node.waitForTransaction(node.broadcast(
-                        IssueTransaction.builder("Asset", 1000, 2).getSignedWith(alice)).id(),
-                IssueTransactionInfo.class).tx().assetId();
+IssueTransaction tx = new IssueTransaction(
+        alice.publicKey(),
+        "Asset",
+        "",
+        1000,
+        2,
+        true,
+        Base64String.empty())
+        .addProof(alice);
+AssetId assetId = node.waitForTransaction(node.broadcast(tx).id(), IssueTransactionInfo.class).tx().assetId();
 
 ReissueTransaction tx = new ReissueTransaction(
         alice.publicKey(),
@@ -257,9 +264,16 @@ System.out.println("applicationStatus:" + txInfo.applicationStatus());
 
 ### Burn transaction (Constructor creation)
 ```java
-AssetId assetId = node.waitForTransaction(node.broadcast(
-                        IssueTransaction.builder("Asset", 1000, 2).getSignedWith(alice)).id(),
-                IssueTransactionInfo.class).tx().assetId();
+IssueTransaction tx = new IssueTransaction(
+        alice.publicKey(),
+        "Asset",
+        "",
+        1000,
+        2,
+        true,
+        Base64String.empty())
+        .addProof(alice);
+AssetId assetId = node.waitForTransaction(node.broadcast(tx).id(), IssueTransactionInfo.class).tx().assetId();
 
 BurnTransaction tx = new BurnTransaction(
         alice.publicKey(), 
@@ -362,9 +376,16 @@ System.out.println("applicationStatus:" + txInfo.applicationStatus());
 
 ### Exchange transaction (Constructor creation)
 ```java
-AssetId assetId = node.waitForTransaction(node.broadcast(
-                        IssueTransaction.builder("Asset", 1000, 2).getSignedWith(alice)).id(),
-                IssueTransactionInfo.class).tx().assetId();
+IssueTransaction tx = new IssueTransaction(
+        alice.publicKey(),
+        "Asset",
+        "",
+        1000,
+        2,
+        true,
+        Base64String.empty())
+        .addProof(alice);
+AssetId assetId = node.waitForTransaction(node.broadcast(tx).id(), IssueTransactionInfo.class).tx().assetId();
 
 Amount amount = Amount.of(1);
 Amount price = Amount.of(100, assetId);
@@ -762,9 +783,16 @@ System.out.println("applicationStatus:" + txInfo.applicationStatus());
 
 ### Sponsor fee transaction (Constructor creation)
 ```java
-AssetId assetId = node.waitForTransaction(node.broadcast(
-                        IssueTransaction.builder("Asset", 1000, 2).getSignedWith(alice)).id(),
-                IssueTransactionInfo.class).tx().assetId();
+IssueTransaction tx = new IssueTransaction(
+        alice.publicKey(),
+        "Asset",
+        "",
+        1000,
+        2,
+        true,
+        Base64String.empty())
+        .addProof(alice);
+AssetId assetId = node.waitForTransaction(node.broadcast(tx).id(), IssueTransactionInfo.class).tx().assetId();
         
 SponsorFeeTransaction tx = new SponsorFeeTransaction(alice.publicKey(), assetId, 5).addProof(alice);
 node.waitForTransaction(node.broadcast(tx).id());
@@ -821,10 +849,17 @@ System.out.println("applicationStatus:" + txInfo.applicationStatus());
 ### Set asset script (Constructor creation)
 ```java
 Base64String script = node.compileScript("{-# SCRIPT_TYPE ASSET #-} true").script();
-        AssetId assetId = node.waitForTransaction(node.broadcast(
-                        IssueTransaction.builder("Asset", 1000, 2)
-                                .script(script).getSignedWith(alice)).id(),
-                IssueTransactionInfo.class).tx().assetId();
+IssueTransaction tx = new IssueTransaction(
+        alice.publicKey(),
+        "Asset",
+        "",
+        1000,
+        2,
+        true,
+        Base64String.empty()
+        )
+        .addProof(alice);
+AssetId assetId = node.waitForTransaction(node.broadcast(tx).id(), IssueTransactionInfo.class).tx().assetId();
 
         
 SetAssetScriptTransaction tx = new SetAssetScriptTransaction(alice.publicKey(), assetId, script).addProof(alice);
@@ -864,9 +899,16 @@ node.waitForTransaction(node.broadcast(tx).id());
 
 ### Update asset info transaction (Constructor creation)
 ```java
-AssetId assetId = node.waitForTransaction(node.broadcast(
-                        IssueTransaction.builder("Asset", 1000, 2).getSignedWith(alice)).id(),
-                IssueTransactionInfo.class).tx().assetId();
+IssueTransaction tx = new IssueTransaction(
+        alice.publicKey(),
+        "Asset",
+        "",
+        1000,
+        2,
+        true,
+        Base64String.empty())
+        .addProof(alice);
+AssetId assetId = node.waitForTransaction(node.broadcast(tx).id(), IssueTransactionInfo.class).tx().assetId();
 
 node.waitBlocks(2);
         
@@ -964,9 +1006,16 @@ System.out.println("state changes:" + txInfo.stateChanges().toString());
 
 ### Invoke script transaction (Constructor creation)
 ```java
-AssetId assetId = node.waitForTransaction(node.broadcast(
-                        IssueTransaction.builder("Asset", 1000, 2).getSignedWith(alice)).id(),
-                IssueTransactionInfo.class).tx().assetId();
+IssueTransaction tx = new IssueTransaction(
+        alice.publicKey(),
+        "Asset",
+        "",
+        1000,
+        2,
+        true,
+        Base64String.empty())
+        .addProof(alice);
+AssetId assetId = node.waitForTransaction(node.broadcast(tx).id(), IssueTransactionInfo.class).tx().assetId();
 
 Base64String script = node.compileScript(
         "{-# STDLIB_VERSION 5 #-}\n" +
