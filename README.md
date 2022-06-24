@@ -1133,9 +1133,9 @@ System.out.println("applicationStatus:" + txInfo.applicationStatus());
 ### Ethereum transfer transaction
 ```java
 Credentials charlie = MetamaskHelper.generateCredentials("some mnemonic");
-String bobAddress = WavesEthConverter.ethToWavesAddress(charlie.getAddress(), ChainId.TESTNET);
+String charlieAddress = WavesEthConverter.ethToWavesAddress(charlie.getAddress(), ChainId.TESTNET);
 
-TransferTransaction tx = TransferTransaction.builder(new Address(bobAddress), Amount.of(1_00_000_000)).getSignedWith(alice);
+TransferTransaction tx = TransferTransaction.builder(new Address(charlieAddress), Amount.of(1_00_000_000)).getSignedWith(alice);
 node.waitForTransaction(node.broadcast(tx).id());
 
 EthereumTransaction transferTx = EthereumTransaction.createAndSign(
@@ -1173,6 +1173,94 @@ System.out.println("payload amount:" + payload.amount().value());
 System.out.println("asset:" + payload.amount().assetId().encoded());
 System.out.println("height:" + ethTxInfo.height());
 System.out.println("applicationStatus:" + ethTxInfo.applicationStatus());
+```
+
+### Ethereum invoke script transaction
+```java
+Credentials charlie = MetamaskHelper.generateCredentials("some mnemonic");
+String charlieAddress = WavesEthConverter.ethToWavesAddress(charlie.getAddress(), ChainId.TESTNET);
+        
+Base64String script = node.compileScript(
+        "{-# STDLIB_VERSION 5 #-}\n" +
+        "{-# CONTENT_TYPE DAPP #-}\n" +
+        "{-# SCRIPT_TYPE ACCOUNT #-}\n" +
+        "@Callable(inv)\n" +
+        "func call(bv: ByteVector, b: Boolean, int: Int, str: String, list: List[Int]) = {\n" +
+        "  let asset = Issue(\"Asset\", \"\", 1, 0, true)\n" +
+        "  let assetId = asset.calculateAssetId()\n" +
+        "  let lease = Lease(inv.caller, 7)\n" +
+        "  let leaseId = lease.calculateLeaseId()\n" +
+        "  [\n" +
+        "    BinaryEntry(\"bin\", assetId),\n" +
+        "    BooleanEntry(\"bool\", true),\n" +
+        "    IntegerEntry(\"int\", 100500),\n" +
+        "    StringEntry(\"assetId\", assetId.toBase58String()),\n" +
+        "    StringEntry(\"leaseId\", leaseId.toBase58String()),\n" +
+        "    StringEntry(\"del\", \"\"),\n" +
+        "    DeleteEntry(\"del\"),\n" +
+        "    asset,\n" +
+        "    SponsorFee(assetId, 1),\n" +
+        "    Reissue(assetId, 4, false),\n" +
+        "    Burn(assetId, 3),\n" +
+        "    ScriptTransfer(inv.caller, 2, assetId),\n" +
+        "    lease,\n" +
+        "    LeaseCancel(lease.calculateLeaseId())\n" +
+        "  ]\n" +
+        "}").script();
+
+node.waitForTransaction(node.broadcast(SetScriptTransaction.builder(script).fee(3400000).getSignedWith(alice)).id());
+
+TransferTransaction tx = TransferTransaction.builder(
+        new Address(charlieAddress), Amount.of(1_00_000_000)).getSignedWith(alice);
+node.waitForTransaction(node.broadcast(tx).id());
+
+ArrayList<Amount> payments = new ArrayList<>();
+payments.add(Amount.of(1, AssetId.WAVES));
+payments.add(Amount.of(2, AssetId.WAVES));
+payments.add(Amount.of(3, AssetId.WAVES));
+
+EthereumTransaction ethInvokeTx = EthereumTransaction.createAndSign(
+        new EthereumTransaction.Invocation(
+                alice.address(),
+                Function.as("call",
+                            BinaryArg.as(new Address(charlieAddress).bytes()),
+                            BooleanArg.as(true),
+                            IntegerArg.as(100500),
+                            StringArg.as(alice.address().toString()),
+                            ListArg.as(IntegerArg.as(100500))
+                ),
+                        payments
+                ),
+        DEFAULT_GAS_PRICE,
+        WavesConfig.chainId(),
+        100500000L,
+        Instant.now().toEpochMilli(),
+        charlie.getEcKeyPair()
+);
+
+EthRpcResponse rs = node.broadcastEthTransaction(ethInvokeTx);
+node.waitForTransaction(ethInvokeTx.id());
+
+EthereumTransactionInfo ethInvokeTxInfo = node.getTransactionInfo(ethInvokeTx.id(), EthereumTransactionInfo.class);
+
+System.out.println("isInvocation:" + ethInvokeTxInfo.isInvokeTransaction());
+System.out.println("type:" + ethInvokeTxInfo.tx().type());
+System.out.println("id:" + ethInvokeTxInfo.tx().id());
+System.out.println("fee:" + ethInvokeTxInfo.tx().fee().value());
+System.out.println("feeAssetId:" + ethInvokeTxInfo.tx().fee().assetId().encoded());
+System.out.println("timestamp:" + ethInvokeTxInfo.tx().timestamp());
+System.out.println("version:" + ethInvokeTxInfo.tx().version());
+System.out.println("chainId:" + ethInvokeTxInfo.tx().chainId());
+System.out.println("sender:" + ethInvokeTxInfo.tx().sender().address().encoded());
+System.out.println("senderPublicKey:" + ethInvokeTxInfo.tx().sender().encoded());
+System.out.println("proofs:" + ethInvokeTxInfo.tx().proofs());
+System.out.println("payload dApp:" + invocation.dApp().encoded());
+System.out.println("payload call function:" + invocation.function().name());
+System.out.println("payload call args:" + invocation.function().args());
+System.out.println("payment:" + invocation.payments());
+System.out.println("stateChanges:" + ethInvokeTxInfo.getStateChanges());
+System.out.println("height:" + ethInvokeTxInfo.height());
+System.out.println("applicationStatus:" + ethInvokeTxInfo.applicationStatus());
 ```
 
 
