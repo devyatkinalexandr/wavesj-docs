@@ -1448,7 +1448,7 @@ System.out.println(addressByAlias.encoded());
 ## Assets
 
 ```java
-// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/assets/getAssetDistribution
+// https://nodes.wavesnodes.com/api-docs/index.html#/assets/getAssetDistribution
 Node mainnetNode = new Node(Profile.MAINNET);
 // USDN asset
 AssetId assetId = AssetId.as("DG2xFkPdDwKUoBkzGAhQtLpSGzfXLiCYPEzeKH2Ad24p");
@@ -1476,6 +1476,141 @@ AssetDistribution assetDistributionWithLimit5WithPagination =
 System.out.println("hasNext:" + assetDistributionWithLimit5WithPagination.hasNext());
 System.out.println("lastItem:" + assetDistributionWithLimit5WithPagination.lastItem().encoded());
 System.out.println("items:" + assetDistributionWithLimit5WithPagination.items());
+```
+
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/assets/getAssetBalances
+List<AssetBalance> assetsBalance = node.getAssetsBalance(alice.address());
+for (AssetBalance assetBalance : assetsBalance) {
+    System.out.println("assetId:" + assetBalance.assetId().encoded());
+    System.out.println("reissuable:" + assetBalance.isReissuable());
+    System.out.println("minSponsoredAssetFee:" + assetBalance.minSponsoredAssetFee());
+    System.out.println("sponsorBalance:" + assetBalance.sponsorBalance());
+    System.out.println("quantity:" + assetBalance.quantity());
+    // need link to issue transaction
+    System.out.println("issueTransaction:" + assetBalance.issueTransaction());
+    System.out.println("balance:" + assetBalance.balance());
+}
+```
+
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/assets/getAssetBalanceByAddress
+AssetId assetId = AssetId.as("KQqRZRAfkfoyjPNDDXD6K1fP5ePFYcx5y5aDycXARLm");
+long assetBalance = node.getAssetBalance(alice.address(), assetId);
+System.out.println("asset balance:" + assetBalance);
+```
+
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/assets/getMultipleAssetDetails
+ArrayList<AssetId> assetIds = new ArrayList<>();
+assetIds.add(AssetId.as("KQqRZRAfkfoyjPNDDXD6K1fP5ePFYcx5y5aDycXARLm"));
+assetIds.add(AssetId.as("o9r6h6VFpFcuKakxwhu6yYyCrnmLdo6TU4p7rdPP7WG"));
+List<AssetDetails> assetsDetails = node.getAssetsDetails(assetIds);
+for (AssetDetails assetDetails: assetsDetails) {
+    System.out.println("assetId:" + assetDetails.assetId().encoded());
+    System.out.println("issueHeight:" + assetDetails.issueHeight());
+    System.out.println("issueTimestamp:" + assetDetails.issueTimestamp());
+    System.out.println("issuerPublicKey:" + assetDetails.issuerPublicKey().encoded());
+    System.out.println("name:" + assetDetails.name());
+    System.out.println("description:" + assetDetails.description());
+    System.out.println("decimals:" + assetDetails.decimals());
+    System.out.println("reissuable:" + assetDetails.isReissuable());
+    System.out.println("quantity:" + assetDetails.quantity());
+    System.out.println("scripted:" + assetDetails.isScripted());
+    System.out.println("minSponsoredAssetFee:" + assetDetails.minSponsoredAssetFee());
+    System.out.println("originTransactionId:" + assetDetails.originTransactionId());
+}
+```
+
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/assets/getAssetDetails
+AssetDetails assetDetails = node.getAssetDetails(AssetId.as("KQqRZRAfkfoyjPNDDXD6K1fP5ePFYcx5y5aDycXARLm"));
+System.out.println("assetId:" + assetDetails.assetId().encoded());
+System.out.println("issueHeight:" + assetDetails.issueHeight());
+System.out.println("issueTimestamp:" + assetDetails.issueTimestamp());
+System.out.println("issuerPublicKey:" + assetDetails.issuerPublicKey().encoded());
+System.out.println("name:" + assetDetails.name());
+System.out.println("description:" + assetDetails.description());
+System.out.println("decimals:" + assetDetails.decimals());
+System.out.println("reissuable:" + assetDetails.isReissuable());
+System.out.println("quantity:" + assetDetails.quantity());
+System.out.println("scripted:" + assetDetails.isScripted());
+System.out.println("minSponsoredAssetFee:" + assetDetails.minSponsoredAssetFee());
+System.out.println("originTransactionId:" + assetDetails.originTransactionId());
+```
+
+```java
+// https://nodes.wavesnodes.com/api-docs/index.html#/assets/getNfts
+
+
+// тут лучше все таки сделать на тестнете на своем адрессе пару nft в примере а не брать чужой адрес
+Node node = new Node(Profile.MAINNET);
+Address addressWithNft = Address.as("3P3ohGCRmJzjTsP7RQ7jZV7QNw76wB1Nsnn");
+List<AssetDetails> nft = node.getNft(addressWithNft, 10);
+for (AssetDetails assetDetails: nft) {
+    System.out.println("assetId:" + assetDetails.assetId().encoded());
+    System.out.println("issueHeight:" + assetDetails.issueHeight());
+    System.out.println("issueTimestamp:" + assetDetails.issueTimestamp());
+    System.out.println("issuerPublicKey:" + assetDetails.issuerPublicKey().encoded());
+    System.out.println("name:" + assetDetails.name());
+    System.out.println("description:" + assetDetails.description());
+    System.out.println("decimals:" + assetDetails.decimals());
+    System.out.println("reissuable:" + assetDetails.isReissuable());
+    System.out.println("quantity:" + assetDetails.quantity());
+    System.out.println("scripted:" + assetDetails.isScripted());
+    System.out.println("minSponsoredAssetFee:" + assetDetails.minSponsoredAssetFee());
+    System.out.println("originTransactionId:" + assetDetails.originTransactionId());
+}
+
+AssetDetails lastReadNft = nft.get(nft.size() - 1);
+List<AssetDetails> nftWithPagination = node.getNft(addressWithNft, 10, lastReadNft.assetId());
+for (AssetDetails assetDetails: nftWithPagination) {
+    System.out.println("assetId:" + assetDetails.assetId().encoded());
+    System.out.println("issueHeight:" + assetDetails.issueHeight());
+    System.out.println("issueTimestamp:" + assetDetails.issueTimestamp());
+    System.out.println("issuerPublicKey:" + assetDetails.issuerPublicKey().encoded());
+    System.out.println("name:" + assetDetails.name());
+    System.out.println("description:" + assetDetails.description());
+    System.out.println("decimals:" + assetDetails.decimals());
+    System.out.println("reissuable:" + assetDetails.isReissuable());
+    System.out.println("quantity:" + assetDetails.quantity());
+    System.out.println("scripted:" + assetDetails.isScripted());
+    System.out.println("minSponsoredAssetFee:" + assetDetails.minSponsoredAssetFee());
+    System.out.println("originTransactionId:" + assetDetails.originTransactionId());
+}
+```
+
+### Blockchain
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/blockchain/getRewardStatus
+BlockchainRewards blockchainRewards = node.getBlockchainRewards();
+System.out.println("height:" + blockchainRewards.height());
+System.out.println("totalWavesAmount:" + blockchainRewards.totalWavesAmount());
+System.out.println("currentReward:" + blockchainRewards.currentReward());
+System.out.println("minIncrement:" + blockchainRewards.minIncrement());
+System.out.println("term:" + blockchainRewards.term());
+System.out.println("nextCheck:" + blockchainRewards.nextCheck());
+System.out.println("height:" + blockchainRewards.height());
+System.out.println("votingIntervalStart:" + blockchainRewards.votingIntervalStart());
+System.out.println("votingInterval:" + blockchainRewards.votingInterval());
+System.out.println("votingThreshold:" + blockchainRewards.votingThreshold());
+System.out.println("votes:" + blockchainRewards.votes());
+```
+
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/blockchain/getRewardStatusAtHeight
+BlockchainRewards blockchainRewards = node.getBlockchainRewards(node.getHeight() - 20);
+System.out.println("height:" + blockchainRewards.height());
+System.out.println("totalWavesAmount:" + blockchainRewards.totalWavesAmount());
+System.out.println("currentReward:" + blockchainRewards.currentReward());
+System.out.println("minIncrement:" + blockchainRewards.minIncrement());
+System.out.println("term:" + blockchainRewards.term());
+System.out.println("nextCheck:" + blockchainRewards.nextCheck());
+System.out.println("height:" + blockchainRewards.height());
+System.out.println("votingIntervalStart:" + blockchainRewards.votingIntervalStart());
+System.out.println("votingInterval:" + blockchainRewards.votingInterval());
+System.out.println("votingThreshold:" + blockchainRewards.votingThreshold());
+System.out.println("votes:" + blockchainRewards.votes());
 ```
 
 
