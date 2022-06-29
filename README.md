@@ -1613,6 +1613,241 @@ System.out.println("votingThreshold:" + blockchainRewards.votingThreshold());
 System.out.println("votes:" + blockchainRewards.votes());
 ```
 
+## Block
+
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/blocks/getBlockById
+Block block = node.getBlock(new Base58String("CmzK4azp2HXVMr9X6H2w9YmaGToRrW124pFyMeptFq9S"));
+
+System.out.println("version:" + block.version());
+System.out.println("timestamp:" + block.timestamp());
+System.out.println("reference:" + block.reference());
+System.out.println("transactionsRoot:" + block.transactionsRoot().encoded());
+System.out.println("id:" + block.id());
+System.out.println("features:" + block.features());
+System.out.println("desiredReward:" + block.desiredReward());
+System.out.println("generator:" + block.generator().encoded());
+System.out.println("signature:" + block.signature().encoded());
+System.out.println("blocksize:" + block.size());
+System.out.println("transactionCount:" + block.transactions().size());
+System.out.println("height:" + block.height());
+System.out.println("totalFee:" + block.totalFee());
+System.out.println("reward:" + block.reward());
+System.out.println("VRF:" + block.vrf().encoded());
+System.out.println("fee:" + block.fee());
+System.out.println("transactions:" + block.transactions());
+```
+
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/blocks/getBlocksByAddress
+int nodeHeight = node.getHeight();
+List<Block> blocks = node.getBlocks(nodeHeight - 5, nodeHeight);
+
+for (Block block: blocks) {
+    System.out.println("version:" + block.version());
+    System.out.println("timestamp:" + block.timestamp());
+    System.out.println("reference:" + block.reference());
+    System.out.println("transactionsRoot:" + block.transactionsRoot().encoded());
+    System.out.println("id:" + block.id());
+    System.out.println("features:" + block.features());
+    System.out.println("desiredReward:" + block.desiredReward());
+    System.out.println("generator:" + block.generator().encoded());
+    System.out.println("signature:" + block.signature().encoded());
+    System.out.println("blocksize:" + block.size());
+    System.out.println("transactionCount:" + block.transactions().size());
+    System.out.println("height:" + block.height());
+    System.out.println("totalFee:" + block.totalFee());
+    System.out.println("reward:" + block.reward());
+    System.out.println("VRF:" + block.vrf().encoded());
+    System.out.println("fee:" + block.fee());
+    System.out.println("transactions:" + block.transactions());
+}
+```
+
+````java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/blocks/getBlockByHeight
+int nodeHeight = node.getHeight();
+Block block = node.getBlock(nodeHeight);
+
+System.out.println("version:" + block.version());
+System.out.println("timestamp:" + block.timestamp());
+System.out.println("reference:" + block.reference());
+System.out.println("transactionsRoot:" + block.transactionsRoot().encoded());
+System.out.println("id:" + block.id());
+System.out.println("features:" + block.features());
+System.out.println("desiredReward:" + block.desiredReward());
+System.out.println("generator:" + block.generator().encoded());
+System.out.println("signature:" + block.signature().encoded());
+System.out.println("blocksize:" + block.size());
+System.out.println("transactionCount:" + block.transactions().size());
+System.out.println("height:" + block.height());
+System.out.println("totalFee:" + block.totalFee());
+System.out.println("reward:" + block.reward());
+System.out.println("VRF:" + block.vrf().encoded());
+System.out.println("fee:" + block.fee());
+System.out.println("transactions:" + block.transactions());
+````
+
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/blocks/getBlockDelay
+int blocksDelay = node.getBlocksDelay(new Base58String("CmzK4azp2HXVMr9X6H2w9YmaGToRrW124pFyMeptFq9S"),10);
+System.out.println("delay:" + blocksDelay);
+```
+
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/blocks/getBlockHeadersById
+BlockHeaders blockHeaders = node.getBlockHeaders(new Base58String("CmzK4azp2HXVMr9X6H2w9YmaGToRrW124pFyMeptFq9S"));
+
+System.out.println("version:" + blockHeaders.version());
+System.out.println("timestamp:" + blockHeaders.timestamp());
+System.out.println("reference:" + blockHeaders.reference());
+System.out.println("transactionsRoot:" + blockHeaders.transactionsRoot().encoded());
+System.out.println("id:" + blockHeaders.id());
+System.out.println("features:" + blockHeaders.features());
+System.out.println("desiredReward:" + blockHeaders.desiredReward());
+System.out.println("generator:" + blockHeaders.generator().encoded());
+System.out.println("signature:" + blockHeaders.signature().encoded());
+System.out.println("blocksize:" + blockHeaders.size());
+System.out.println("transactionCount:" + blockHeaders.transactionsCount());
+System.out.println("height:" + blockHeaders.height());
+System.out.println("totalFee:" + blockHeaders.totalFee());
+System.out.println("reward:" + blockHeaders.reward());
+System.out.println("VRF:" + blockHeaders.vrf().encoded());
+```
+
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/blocks/getBlockHeadersByHeight
+BlockHeaders blockHeaders = node.getBlockHeaders(node.getHeight());
+
+System.out.println("version:" + blockHeaders.version());
+System.out.println("timestamp:" + blockHeaders.timestamp());
+System.out.println("reference:" + blockHeaders.reference());
+System.out.println("transactionsRoot:" + blockHeaders.transactionsRoot().encoded());
+System.out.println("id:" + blockHeaders.id());
+System.out.println("features:" + blockHeaders.features());
+System.out.println("desiredReward:" + blockHeaders.desiredReward());
+System.out.println("generator:" + blockHeaders.generator().encoded());
+System.out.println("signature:" + blockHeaders.signature().encoded());
+System.out.println("blocksize:" + blockHeaders.size());
+System.out.println("transactionCount:" + blockHeaders.transactionsCount());
+System.out.println("height:" + blockHeaders.height());
+System.out.println("totalFee:" + blockHeaders.totalFee());
+System.out.println("reward:" + blockHeaders.reward());
+System.out.println("VRF:" + blockHeaders.vrf().encoded());
+```
+
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/blocks/getLastBlockHeaders
+BlockHeaders blockHeaders = node.getLastBlockHeaders();
+
+System.out.println("version:" + blockHeaders.version());
+System.out.println("timestamp:" + blockHeaders.timestamp());
+System.out.println("reference:" + blockHeaders.reference());
+System.out.println("transactionsRoot:" + blockHeaders.transactionsRoot().encoded());
+System.out.println("id:" + blockHeaders.id());
+System.out.println("features:" + blockHeaders.features());
+System.out.println("desiredReward:" + blockHeaders.desiredReward());
+System.out.println("generator:" + blockHeaders.generator().encoded());
+System.out.println("signature:" + blockHeaders.signature().encoded());
+System.out.println("blocksize:" + blockHeaders.size());
+System.out.println("transactionCount:" + blockHeaders.transactionsCount());
+System.out.println("height:" + blockHeaders.height());
+System.out.println("totalFee:" + blockHeaders.totalFee());
+System.out.println("reward:" + blockHeaders.reward());
+System.out.println("VRF:" + blockHeaders.vrf().encoded());
+```
+
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/blocks/getBlockHeadersRange
+int nodeHeight = node.getHeight();
+List<BlockHeaders> blocksHeaders = node.getBlocksHeaders(nodeHeight - 5, nodeHeight);
+
+for (BlockHeaders block : blocksHeaders) {
+    System.out.println("version:" + block.version());
+    System.out.println("timestamp:" + block.timestamp());
+    System.out.println("reference:" + block.reference());
+    System.out.println("transactionsRoot:" + block.transactionsRoot().encoded());
+    System.out.println("id:" + block.id());
+    System.out.println("features:" + block.features());
+    System.out.println("desiredReward:" + block.desiredReward());
+    System.out.println("generator:" + block.generator().encoded());
+    System.out.println("signature:" + block.signature().encoded());
+    System.out.println("blocksize:" + block.size());
+    System.out.println("height:" + block.height());
+    System.out.println("totalFee:" + block.totalFee());
+    System.out.println("reward:" + block.reward());
+    System.out.println("VRF:" + block.vrf().encoded());
+}
+```
+
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/blocks/getHeight
+int nodeHeight = node.getHeight();
+System.out.println("current blockchain height" + nodeHeight);
+```
+
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/blocks/getBlockHeightbyId
+int nodeHeight = node.getBlockHeight(new Base58String("CmzK4azp2HXVMr9X6H2w9YmaGToRrW124pFyMeptFq9S"));
+System.out.println("height at block:" + nodeHeight);
+```
+
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/blocks/getHeightByTimestamp
+int nodeHeight = node.getBlockHeight(Instant.now().toEpochMilli());
+System.out.println("block heigth at timestamp:" + nodeHeight);
+```
+
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/blocks/getLastBlock
+Block lastBlock = node.getLastBlock();
+System.out.println("version:" + lastBlock.version());
+System.out.println("timestamp:" + lastBlock.timestamp());
+System.out.println("reference:" + lastBlock.reference());
+System.out.println("transactionsRoot:" + lastBlock.transactionsRoot().encoded());
+System.out.println("id:" + lastBlock.id());
+System.out.println("features:" + lastBlock.features());
+System.out.println("desiredReward:" + lastBlock.desiredReward());
+System.out.println("generator:" + lastBlock.generator().encoded());
+System.out.println("signature:" + lastBlock.signature().encoded());
+System.out.println("blocksize:" + lastBlock.size());
+System.out.println("transactionCount:" + lastBlock.transactions().size());
+System.out.println("height:" + lastBlock.height());
+System.out.println("totalFee:" + lastBlock.totalFee());
+System.out.println("reward:" + lastBlock.reward());
+System.out.println("VRF:" + lastBlock.vrf().encoded());
+System.out.println("fee:" + lastBlock.fee());
+System.out.println("transactions:" + lastBlock.transactions());
+```
+
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/blocks/getBlocksRange
+int nodeHeight = node.getHeight();
+List<Block> blocks = node.getBlocks(nodeHeight - 5, nodeHeight);
+
+for (Block block : blocks) {
+    System.out.println("version:" + block.version());
+    System.out.println("timestamp:" + block.timestamp());
+    System.out.println("reference:" + block.reference());
+    System.out.println("transactionsRoot:" + block.transactionsRoot().encoded());
+    System.out.println("id:" + block.id());
+    System.out.println("features:" + block.features());
+    System.out.println("desiredReward:" + block.desiredReward());
+    System.out.println("generator:" + block.generator().encoded());
+    System.out.println("signature:" + block.signature().encoded());
+    System.out.println("blocksize:" + block.size());
+    System.out.println("transactionCount:" + block.transactions().size());
+    System.out.println("height:" + block.height());
+    System.out.println("totalFee:" + block.totalFee());
+    System.out.println("reward:" + block.reward());
+    System.out.println("VRF:" + block.vrf().encoded());
+    System.out.println("fee:" + block.fee());
+    System.out.println("transactions:" + block.transactions());
+}
+```
+
+
+
 
 
 
