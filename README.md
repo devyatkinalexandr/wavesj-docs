@@ -1311,6 +1311,173 @@ System.out.println("height:" + ethInvokeTxInfo.height());
 System.out.println("applicationStatus:" + ethInvokeTxInfo.applicationStatus());
 ```
 
+# Работа в нодой
+
+### Addresses
+
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/addresses/getWalletAddresses
+List<Address> addresses = node.getAddresses();
+for (Address address: addresses) {
+    System.out.println("address:" + address.encoded());
+    System.out.println("chainId:" + address.chainId());
+}
+```
+
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/addresses/getMultipleBalances
+ArrayList<Address> addresses = new ArrayList<>();
+addresses.add(alice.address());
+addresses.add(bob.address());
+
+// at current height
+List<Balance> balances = node.getBalances(addresses);
+for (Balance balance: balances) {
+    System.out.println("address:" + balance.getAddress().encoded());
+    System.out.println("balance:" + balance.getBalance());
+}
+
+// at specific height
+List<Balance> balancesOnHeight = node.getBalances(addresses, node.getHeight() - 10);
+for (Balance balance: balancesOnHeight) {
+    System.out.println("address:" + balance.getAddress().encoded());
+    System.out.println("balance:" + balance.getBalance());
+}
+```
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/addresses/getRegularBalance
+long balance = node.getBalance(alice.address());
+System.out.println("Alice balance: " + balance);
+```
+
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/addresses/getConfirmedRegularBalance
+long balance = node.getBalance(alice.address(), 2);
+System.out.println("Alice balance: " + balance);
+```
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/addresses/getWavesBalances
+BalanceDetails balanceDetails = node.getBalanceDetails(alice.address());
+System.out.println("address: " + balanceDetails.address().encoded());
+System.out.println("generating balance: " + balanceDetails.generating());
+System.out.println("available balance: " + balanceDetails.available());
+System.out.println("effective balance: " + balanceDetails.effective());
+```
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/addresses/getDataByFilter
+List<DataEntry> dataByAddress = node.getData(alice.address());
+System.out.println("Data by address");
+for (DataEntry data: dataByAddress) {
+    System.out.println("key:" + data.key());
+    System.out.println("type:" + data.type());
+    System.out.println("value:" + data.valueAsObject());
+}
+
+// match key that ends with "Id"
+Pattern regex = Pattern.compile(".*Id$");
+List<DataEntry> dataByRegex = node.getData(alice.address(), regex);
+System.out.println("Data by regex");
+for (DataEntry data: dataByRegex) {
+    System.out.println("key:" + data.key());
+    System.out.println("type:" + data.type());
+    System.out.println("value:" + data.valueAsObject());
+}
+```
+
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/addresses/getDataByMultipleKeysViaPost
+ArrayList<String> keys = new ArrayList<>();
+keys.add("str");
+keys.add("leaseId");
+List<DataEntry> dataByKeys = node.getData(alice.address(), keys);
+System.out.println("Data by keys");
+for (DataEntry data: dataByKeys) {
+    System.out.println("key:" + data.key());
+    System.out.println("type:" + data.type());
+    System.out.println("value:" + data.valueAsObject());
+}
+```
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/addresses/getDataByKey
+DataEntry dataByKey = node.getData(alice.address(), "str");
+System.out.println("Data by key");
+System.out.println("key:" + dataByKey.key());
+System.out.println("type:" + dataByKey.type());
+System.out.println("value:" + dataByKey.valueAsObject());
+```
+
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/addresses/getScriptInfo
+ScriptInfo scriptInfo = node.getScriptInfo(alice.address());
+System.out.println("script:" + scriptInfo.script().encoded());
+System.out.println("complexity:" + scriptInfo.complexity());
+System.out.println("verifierComplexity:" + scriptInfo.verifierComplexity());
+System.out.println("callableComplexities:" + scriptInfo.callableComplexities().toString());
+System.out.println("extraFee:" + scriptInfo.extraFee());
+```
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/addresses/getScriptMeta
+ScriptMeta scriptMeta = node.getScriptMeta(alice.address());
+System.out.println("version:" + scriptMeta.metaVersion());
+System.out.println("callableFuncTypes:" + scriptMeta.callableFunctions());
+```
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/addresses/getWalletAddressesRange
+List<Address> addresses = node.getAddresses(0, 5);
+for (Address address : addresses) {
+    System.out.println(address.encoded());
+}
+```
+
+## Alias 
+
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/alias/getAliasesByAddress
+List<Alias> aliasesByAddress = node.getAliasesByAddress(alice.address());
+for (Alias alias : aliasesByAddress) {
+    System.out.println(alias.name());
+}
+```
+
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/alias/getAddressByAlias
+Address addressByAlias = node.getAddressByAlias(Alias.as("alice_1655991632139"));
+System.out.println(addressByAlias.encoded());
+```
+
+## Assets
+
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/assets/getAssetDistribution
+Node mainnetNode = new Node(Profile.MAINNET);
+// USDN asset
+AssetId assetId = AssetId.as("DG2xFkPdDwKUoBkzGAhQtLpSGzfXLiCYPEzeKH2Ad24p");
+
+int nodeHeight = mainnetNode.getHeight();
+
+// default limit 1000
+AssetDistribution assetDistributionWithLimit1000 = mainnetNode.getAssetDistribution(assetId, nodeHeight - 20);
+System.out.println("hasNext:" + assetDistributionWithLimit1000.hasNext());
+System.out.println("lastItem:" + assetDistributionWithLimit1000.lastItem().encoded());
+System.out.println("items:" + assetDistributionWithLimit1000.items());
+
+AssetDistribution assetDistributionWithLimit5 = mainnetNode.getAssetDistribution(assetId, nodeHeight - 20, 5);
+System.out.println("hasNext:" + assetDistributionWithLimit5.hasNext());
+System.out.println("lastItem:" + assetDistributionWithLimit5.lastItem().encoded());
+System.out.println("items:" + assetDistributionWithLimit5.items());
+
+AssetDistribution assetDistributionWithLimit5WithPagination =
+        mainnetNode.getAssetDistribution(
+                assetId,
+                nodeHeight - 20,
+                5,
+                assetDistributionWithLimit5.lastItem()
+        );
+System.out.println("hasNext:" + assetDistributionWithLimit5WithPagination.hasNext());
+System.out.println("lastItem:" + assetDistributionWithLimit5WithPagination.lastItem().encoded());
+System.out.println("items:" + assetDistributionWithLimit5WithPagination.items());
+```
+
 
 
 
