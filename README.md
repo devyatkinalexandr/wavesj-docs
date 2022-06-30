@@ -1846,6 +1846,214 @@ for (Block block : blocks) {
 }
 ```
 
+## Debug
+
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/debug/getBalanceHistory
+List<HistoryBalance> balanceHistory = node.getBalanceHistory(alice.address());
+for (HistoryBalance historyBalance : balanceHistory) {
+    System.out.println("height:" + historyBalance.height());
+    System.out.println("balance:" + historyBalance.balance());
+}
+```
+
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/debug/validateTx
+TransferTransaction tx = TransferTransaction
+        .builder(
+                bob.address(),
+                Amount.of(1000)
+        )
+        .getSignedWith(alice);
+
+Validation validation = node.validateTransaction(tx);
+System.out.println("valid:" + validation.isValid());
+System.out.println("validationTime:" + validation.validationTime());
+System.out.println("error:" + validation.error());
+```
+
+## Leasing 
+
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/leasing/getActiveLeases
+List<LeaseInfo> activeLeases = node.getActiveLeases(alice.address());
+for (LeaseInfo leaseInfo : activeLeases) {
+    System.out.println("id:" + leaseInfo.id().encoded());
+    System.out.println("originTransactionId:" + leaseInfo.originTransactionId().encoded());
+    System.out.println("sender:" + leaseInfo.sender().encoded());
+    System.out.println("recipient:" + leaseInfo.recipient().toString());
+    System.out.println("amount:" + leaseInfo.amount());
+    System.out.println("height:" + leaseInfo.height());
+    System.out.println("status:" + leaseInfo.status().name());
+    System.out.println("cancelHeight:" + leaseInfo.cancelHeight().orElse(0));
+    leaseInfo.cancelHeight().ifPresent(height -> System.out.println("cancelHeight:" + height));
+    leaseInfo.cancelTransactionId().ifPresent(id -> System.out.println("cancelTransactionId:" + id.encoded()));
+}
+```
+
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/leasing/getMultipleLeasesViaPost
+ArrayList<Id> leaseIds = new ArrayList<>();
+leaseIds.add(Id.as("3WYy8BuCwMd91NcbUqUgSnuNYtww3oBoeSZSZ3YWE8iY"));
+leaseIds.add(Id.as("ED3UUVXoJEeG8h55FhTrMmTuUNTtL6g8BhxsXM4fwjV7"));
+List<LeaseInfo> leasesInfo = node.getLeasesInfo(leaseIds);
+for (LeaseInfo leaseInfo : leasesInfo) {
+    System.out.println("id:" + leaseInfo.id().encoded());
+    System.out.println("originTransactionId:" + leaseInfo.originTransactionId().encoded());
+    System.out.println("sender:" + leaseInfo.sender().encoded());
+    System.out.println("recipient:" + leaseInfo.recipient().toString());
+    System.out.println("amount:" + leaseInfo.amount());
+    System.out.println("height:" + leaseInfo.height());
+    System.out.println("status:" + leaseInfo.status().name());
+    System.out.println("cancelHeight:" + leaseInfo.cancelHeight().orElse(0));
+    leaseInfo.cancelHeight().ifPresent(height -> System.out.println("cancelHeight:" + height));
+    leaseInfo.cancelTransactionId().ifPresent(id -> System.out.println("cancelTransactionId:" + id.encoded()));
+}
+```
+
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/leasing/getLease
+LeaseInfo leaseInfo = node.getLeaseInfo(Id.as("3WYy8BuCwMd91NcbUqUgSnuNYtww3oBoeSZSZ3YWE8iY"));
+System.out.println("id:" + leaseInfo.id().encoded());
+System.out.println("originTransactionId:" + leaseInfo.originTransactionId().encoded());
+System.out.println("sender:" + leaseInfo.sender().encoded());
+System.out.println("recipient:" + leaseInfo.recipient().toString());
+System.out.println("amount:" + leaseInfo.amount());
+System.out.println("height:" + leaseInfo.height());
+System.out.println("status:" + leaseInfo.status().name());
+System.out.println("cancelHeight:" + leaseInfo.cancelHeight().orElse(0));
+leaseInfo.cancelHeight().ifPresent(height -> System.out.println("cancelHeight:" + height));
+leaseInfo.cancelTransactionId().ifPresent(id -> System.out.println("cancelTransactionId:" + id.encoded()));
+```
+
+## Node
+
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/node/getNodeVersion
+String version = node.getVersion();
+System.out.println("version:" + version);
+```
+
+## Peers
+
+## Transactions
+
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/transactions/getTxsByAddress
+List<TransactionInfo> transactionsByAddressWithLimit1000 = node.getTransactionsByAddress(alice.address());
+
+List<TransactionInfo> transactionsByAddressWithLimit5 = node.getTransactionsByAddress(alice.address(), 5);
+
+Id lastTxIdInRs = transactionsByAddressWithLimit5.get(transactionsByAddressWithLimit5.size() - 1).tx().id();
+List<TransactionInfo> transactionsByAddressWithLimit5AndPagination = 
+        node.getTransactionsByAddress(alice.address(), 5, lastTxIdInRs);
+
+// read transaction in "working with transaction"
+```
+
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/transactions/broadcastSignedTx
+// broadcast transaction in "working with transaction"
+```
+
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/transactions/calculateTxFee
+TransferTransaction tx = TransferTransaction
+        .builder(
+                bob.address(),
+                Amount.of(1000)
+        )
+        .getSignedWith(alice);
+Amount amount = node.calculateTransactionFee(tx);
+System.out.println("feeAssetId:" + amount.assetId().encoded());
+System.out.println("feeAmount:" + amount.value());
+```
+
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/transactions/getTxById
+TransactionInfo txInfo = node.getTransactionInfo(Id.as("HxRYSfWWuhkqLqDgfcbV8Gz5e2ri96E5HfukT6vSRDHx"));
+TransferTransactionInfo transferTxInfo = 
+        node.getTransactionInfo(Id.as("HxRYSfWWuhkqLqDgfcbV8Gz5e2ri96E5HfukT6vSRDHx"), TransferTransactionInfo.class);
+
+// read transaction in "working with transaction"
+```
+
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/transactions/getTxStatuses
+TransactionInfo txInfo = node.getTransactionsByAddress(alice.address(), 1).get(0);
+List<TransactionStatus> transactionsStatus = node.getTransactionsStatus(txInfo.tx().id());
+TransactionStatus firstTxStatus = transactionsStatus.get(0);
+System.out.println("status:" + firstTxStatus.status().name());
+System.out.println("height:" + firstTxStatus.height());
+System.out.println("confirmations:" + firstTxStatus.confirmations());
+System.out.println("applicationStatus:" + firstTxStatus.applicationStatus());
+System.out.println("id:" + firstTxStatus.id().encoded());
+```
+
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/transactions/getTxStatuses
+List<TransactionInfo> transactionsByAddress = node.getTransactionsByAddress(alice.address(), 2);
+TransactionInfo txInfo = transactionsByAddress.get(0);
+List<TransactionStatus> transactionsStatus = node.getTransactionsStatus(txInfo.tx().id());
+TransactionStatus firstTxStatus = transactionsStatus.get(0);
+System.out.println("status:" + firstTxStatus.status().name());
+System.out.println("height:" + firstTxStatus.height());
+System.out.println("confirmations:" + firstTxStatus.confirmations());
+System.out.println("applicationStatus:" + firstTxStatus.applicationStatus());
+System.out.println("id:" + firstTxStatus.id().encoded());
+
+List<Id> ids = transactionsByAddress.stream().map(info -> info.tx().id()).collect(Collectors.toList());
+List<TransactionStatus> transactionsStatuses = node.getTransactionsStatus(ids);
+for (TransactionStatus txStatus: transactionsStatuses) {
+    System.out.println("status:" + txStatus.status().name());
+    System.out.println("height:" + txStatus.height());
+    System.out.println("confirmations:" + txStatus.confirmations());
+    System.out.println("applicationStatus:" + txStatus.applicationStatus());
+    System.out.println("id:" + txStatus.id().encoded());
+}
+```
+
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/transactions/getUnconfirmedTxs
+List<Transaction> unconfirmedTransactions = node.getUnconfirmedTransactions();
+// read transaction in "working with transaction"
+
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/transactions/getUnconfirmedTxById
+Transaction unconfirmedTransaction = node.getUnconfirmedTransaction(Id.as("HxRYSfWWuhkqLqDgfcbV8Gz5e2ri96E5HfukT6vSRDHx"));
+// read transaction in "working with transaction"
+
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/transactions/getUtxPoolSize
+int utxSize = node.getUtxSize();
+System.out.println("number of transactions in the UTX pool:" + utxSize);
+```
+
+
+## Utils
+
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/utils/compileCode
+ScriptInfo scriptInfo = node.compileScript("{-# STDLIB_VERSION 5 #-}\n" +
+        "{-# CONTENT_TYPE DAPP #-}\n" +
+        "{-# SCRIPT_TYPE ACCOUNT #-}\n" +
+        "\n" +
+        "@Callable(i)\n" +
+        "func storeData() = {\n" +
+        "  [\n" +
+        "    StringEntry(\"caller\", i.caller.toString())\n" +
+        "  ]\n" +
+        "}");
+
+System.out.println("script:" + scriptInfo.script().encoded());
+System.out.println("complexity:" + scriptInfo.complexity());
+System.out.println("verifierComplexity:" + scriptInfo.verifierComplexity());
+System.out.println("callableComplexities:" + scriptInfo.callableComplexities());
+System.out.println("extraFee:" + scriptInfo.extraFee());
+```
+
+
+
+
+
 
 
 
