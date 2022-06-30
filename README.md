@@ -1429,6 +1429,11 @@ for (Address address : addresses) {
 }
 ```
 
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/addresses/validateAddress
+boolean valid = Address.isValid("3P274YB5qseSE9DTTL3bpSjosZrYBPDpJ8k");
+```
+
 ## Alias 
 
 ```java
@@ -2029,6 +2034,18 @@ System.out.println("number of transactions in the UTX pool:" + utxSize);
 
 
 ## Utils
+
+```java
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/utils/hashFast
+String message = "message";
+byte[] blake = Hash.blake(message.getBytes(StandardCharsets.UTF_8));
+
+// https://nodes-testnet.wavesnodes.com/api-docs/index.html#/utils/hashSecure
+byte[] keccak = Hash.keccak(Hash.blake(message.getBytes(StandardCharsets.UTF_8)));
+
+System.out.println(Base58.encode(blake));
+System.out.println(Base58.encode(keccak));
+```
 
 ```java
 // https://nodes-testnet.wavesnodes.com/api-docs/index.html#/utils/compileCode
